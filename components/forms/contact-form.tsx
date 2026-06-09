@@ -13,7 +13,6 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-    FormDescription
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -86,9 +85,6 @@ export function ContactForm() {
                             <FormControl>
                                 <Input placeholder="Enter your name" {...field} />
                             </FormControl>
-                            {/* <FormDescription>
-                                This is your public display name.
-                            </FormDescription> */}
                             <FormMessage />
                         </FormItem>
                     )}
@@ -128,9 +124,6 @@ export function ContactForm() {
                             <FormControl>
                                 <Input placeholder="Link for social account" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                Aaron James R. Mission
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
