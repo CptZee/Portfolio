@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import localFont from "next/font/local";
 
+import { Analytics } from "@vercel/analytics/next"
 import { siteConfig } from "@/constants/Site";
 import { routesConfig } from "@/constants/Routes";
 import { MainNav } from "@/components/common/main-nav";
@@ -100,6 +101,7 @@ export default function RootLayout({
               </div>
             </header>
             <main className="container flex-1">{children}</main>
+            <Analytics />
             <SiteFooter />
           </div>
         </ThemeProvider>
