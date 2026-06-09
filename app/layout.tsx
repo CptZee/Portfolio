@@ -4,6 +4,7 @@ import { Inter as FontSans } from "next/font/google";
 import localFont from "next/font/local";
 
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { siteConfig } from "@/constants/Site";
 import { routesConfig } from "@/constants/Routes";
 import { MainNav } from "@/components/common/main-nav";
@@ -102,6 +103,7 @@ export default function RootLayout({
             </header>
             <main className="container flex-1">{children}</main>
             <Analytics />
+            <SpeedInsights />
             <SiteFooter />
           </div>
         </ThemeProvider>
