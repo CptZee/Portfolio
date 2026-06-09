@@ -9,9 +9,9 @@ export const siteConfig = {
         github: "https://github.com/CptZee",
     },
     iconIco:
-        "https://res.cloudinary.com/dbfvcn3f6/image/upload/v1692357384/assets/naman-favicon.ico",
+        "favicon.ico",
     logoIcon:
-        "https://res.cloudinary.com/dbfvcn3f6/image/upload/v1692357294/assets/naman-logo.png",
+        "aaron-logo.png",
     keywords: [
         "Aaron James R. Mission",
         "Game Developer",
