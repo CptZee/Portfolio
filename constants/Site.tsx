@@ -4,7 +4,7 @@ export const siteConfig = {
     username: "cptzee",
     description:
         "Aaron James Mission - Software Engineer building scalable applications, backend systems, and seamless user experiences.",
-    url: "https://portfolio-self-xi-31.vercel.app/",
+    url: "https://ajmission.dev/",
     links: {
         github: "https://github.com/CptZee",
     },
