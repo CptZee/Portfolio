@@ -8,7 +8,6 @@ type PagesConfig = {
             title: string;
             description: string;
         };
-        // featuredDescription: string;
     };
 };
 

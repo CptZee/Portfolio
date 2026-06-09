@@ -8,9 +8,7 @@ import { routesConfig } from "@/constants/Routes";
 import { MainNav } from "@/components/common/main-nav";
 import { ModeToggle } from "@/components/common/mode-toggle";
 import { SiteFooter } from "@/components/common/site-footer";
-import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/common/theme-provider";
-import { ModalProvider } from "@/providers/modal-provider";
 import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({
@@ -104,8 +102,6 @@ export default function RootLayout({
             <main className="container flex-1">{children}</main>
             <SiteFooter />
           </div>
-          <Toaster />
-          <ModalProvider />
         </ThemeProvider>
       </body>
     </html>
