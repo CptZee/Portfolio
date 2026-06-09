@@ -104,7 +104,6 @@ export default function RootLayout({
             <main className="container flex-1">{children}</main>
             <SiteFooter />
           </div>
-
           <Toaster />
           <ModalProvider />
         </ThemeProvider>
