@@ -3,8 +3,11 @@ import Link from "next/link";
 
 import { Icons } from "../common/icons";
 import { Button } from "@/components/ui/button";
-import ChipContainer from "../ui/chip-container";
+import ChipContainer from "@/components/ui/chip-container";
 import { ProjectInterface } from "@/constants/Projects";
+import { WobbleCard } from "@/components/ui/wobble-card";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
+
 
 interface ProjectCardProps {
     project: ProjectInterface;
@@ -13,7 +16,14 @@ interface ProjectCardProps {
 export default function ProjectCard({ project }: ProjectCardProps) {
     return (
         <div className="relative p-6 w-full bg-background border border-border rounded-lg h-full flex flex-col">
-            <div className="relative w-full h-[200px] flex-shrink-0">
+            <GlowingEffect
+                spread={40}
+                glow={true}
+                disabled={false}
+                proximity={64}
+                inactiveZone={0.01}
+            />
+            <WobbleCard className="relative w-full h-[200px] flex-shrink-0">
                 <Image
                     className="rounded-lg border border-border object-cover"
                     src={project.companyLogoImg}
@@ -21,7 +31,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
                 />
-            </div>
+            </WobbleCard>
             <div className="pt-5 space-y-3 flex flex-col flex-grow">
                 <h5 className="text-2xl font-bold tracking-tight text-foreground">
                     {project.companyName}
@@ -46,6 +56,6 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     <Icons.work className="h-4 w-4" />
                 )}
             </div>
-        </div>
+        </div >
     );
 }
