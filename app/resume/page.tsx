@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function ResumePage() {
     useEffect(() => {
-        redirect(process.env.NEXT_PUBLIC_RESUME_LINK || "/");
+        redirect("/MISSION_AARON_JAMES-RESUME.pdf");
     }, []);
     return <div>Redirecting to the resume...</div>;
 }

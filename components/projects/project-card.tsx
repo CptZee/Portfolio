@@ -19,6 +19,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     src={project.companyLogoImg}
                     alt="img"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                 />
             </div>
             <div className="pt-5 space-y-3 flex flex-col flex-grow">
