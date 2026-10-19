@@ -29,6 +29,79 @@ export interface ProjectInterface {
 
 export const Projects: ProjectInterface[] = [
     {
+        id: "surprises",
+        companyName: "My Little Surprises",
+        type: "Personal",
+        category: ["Full Stack"],
+        shortDescription:
+            "A small website that shows random categorized messages from people.",
+        websiteLink: "https://surprises.ajmission.dev",
+        githubLink: "https://github.com/CptZee/my-little-surprises",
+        techStack: [
+            "React",
+            "Next.js",
+            "PostgreSQL",
+            "Supabase",
+            "Vercel",
+        ],
+        startDate: new Date("2026-10-19"),
+        endDate: new Date("2026-10-19"),
+        companyLogoImg: "/projects/surprises/logo.png",
+        pagesInfoArr: [],
+        descriptionDetails: {
+            paragraphs: [
+                "My Little Surprises is a personalized web application designed to spread positivity through thoughtful messages, encouraging words, and small digital surprises. Users can discover randomized messages across different categories, creating a simple and engaging experience centered around meaningful interactions.",
+
+                "Built with Next.js, React, TypeScript, and Supabase, the application integrates a PostgreSQL database for dynamic message retrieval and management. It features categorized surprises, browser-based favorites, and multiple sharing options, combining a responsive user interface with a lightweight, scalable full-stack architecture."
+            ],
+
+            bullets: [
+                "Developed a responsive full-stack web application using Next.js, React, and TypeScript with a modern, pastel-inspired user interface.",
+                "Integrated Supabase and PostgreSQL to store, organize, and dynamically retrieve randomized messages based on selected categories.",
+                "Implemented four message categories: A Little Smile, Sweet Thoughts, Words of Encouragement, and Just Because.",
+                "Built a browser-based favorites system that allows users to save, revisit, and remove up to 50 unique messages.",
+                "Developed message-sharing functionality through direct links, social media, and dynamically generated images.",
+                "Deployed the application on Vercel, leveraging Next.js for optimized performance and seamless web delivery."
+            ]
+        },
+    },
+    {
+        id: "hosting",
+        companyName: "Game Hosting",
+        type: "Personal",
+        category: ["Full Stack", "Game Dev"],
+        shortDescription:
+            "A self-hosted game server management platform powered by Pterodactyl Panel.",
+        websiteLink: "",
+        githubLink: "",
+        techStack: [
+            "Pterodactyl",
+            "Docker",
+            "Linux",
+            "MySQL",
+            "PHP",
+            "Nginx",
+        ],
+        startDate: new Date("2020-01-01"),
+        endDate: new Date(),
+        companyLogoImg: "/projects/hosting/logo.png",
+        pagesInfoArr: [],
+        descriptionDetails: {
+            paragraphs: [
+                "A personal game hosting infrastructure built using Pterodactyl Panel to deploy, manage, and monitor dedicated game servers through a centralized web interface.",
+                "The project focuses on server administration, containerized deployments, resource management, and automation, providing a scalable environment for hosting multiplayer game servers."
+            ],
+
+            bullets: [
+                "Configured and deployed Pterodactyl Panel and Wings for centralized game server management.",
+                "Utilized Docker containers to isolate and efficiently manage multiple game server instances.",
+                "Implemented automated server provisioning, monitoring, backups, and resource allocation workflows.",
+                "Managed Linux-based hosting infrastructure, networking, security, and database integration.",
+                "Hosted and maintained multiplayer game servers with support for scalable deployment and administration."
+            ]
+        },
+    },
+    {
         id: "ched2",
         companyName: "CHED Voyage Information System",
         type: "Professional",

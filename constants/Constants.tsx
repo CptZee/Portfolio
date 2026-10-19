@@ -40,7 +40,11 @@ export type ValidSkills =
     | "Unity"
     | "Miro"
     | "ClickUp"
-    | "C#";
+    | "C#"
+    | "Pterodactyl"
+    | "Linux"
+    | "PostgreSQL"
+    | "Nginx";
 
 export type ValidCategory =
     | "Full Stack"
