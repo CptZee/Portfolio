@@ -29,6 +29,81 @@ export interface ProjectInterface {
 
 export const Projects: ProjectInterface[] = [
     {
+        id: "fallen-tear",
+        companyName: "Fallen Tear: The Ascension",
+        type: "Professional",
+        category: ["Game Dev"],
+        shortDescription:
+            "A hand-drawn Metroidvania adventure developed by The CMD Studios, featuring exploration, environmental puzzles, and interconnected gameplay systems.",
+        websiteLink: "https://store.steampowered.com/app/1446900/Fallen_Tear_The_Ascension/",
+        githubLink: "",
+        techStack: [
+            "Unity",
+            "Git",
+        ],
+        startDate: new Date("2024-06-01"),
+        endDate: new Date(),
+        companyLogoImg: "/projects/fallen-tear/logo.png",
+        pagesInfoArr: [],
+
+        descriptionDetails: {
+            paragraphs: [
+                "Fallen Tear: The Ascension is a hand-drawn 2D Metroidvania adventure developed by The CMD Studios, featuring an interconnected world filled with environmental challenges, exploration, and narrative-driven progression.",
+                "As a Unity Game Developer, my primary responsibilities focus on implementing gameplay features and scripted events, including environmental puzzles, dynamic environmental hazards, quest progression, and interactive sequences. I work on translating game design requirements into functional gameplay experiences while ensuring seamless integration with existing systems.",
+                "Beyond gameplay development, I contribute to audio implementation, bug fixing, and optimization of existing systems. I also collaborate with other departments, including Technical Art, to implement requested features, resolve technical issues, and support cross-disciplinary development workflows."
+            ],
+            bullets: [
+                "Developed and implemented gameplay features and scripted events using Unity and C#.",
+                "Designed and implemented environmental puzzles involving interactive objects, gameplay triggers, and progression mechanics.",
+                "Implemented environmental hazards and gameplay effects, including wind mechanics, sand drill worm spawning, and weather environmental events.",
+                "Developed and maintained quest progression logic, ensuring proper event sequencing, objective tracking, and gameplay continuity.",
+                "Implemented scripted gameplay events that coordinate environmental interactions, character behaviors, and progression triggers.",
+                "Integrated background music (BGM), sound effects (SFX), and voice-overs (VO) into gameplay features, scripted events, and interactive sequences.",
+                "Investigated and resolved bugs across gameplay features and other development areas to support overall game stability.",
+                "Optimized and refactored existing systems to improve maintainability, efficiency, and compatibility with new gameplay requirements.",
+                "Collaborated with other development departments, including Technical Art, to implement requested functionality and address technical requirements."
+            ]
+        },
+
+    },
+    {
+        id: "heartfleet",
+        companyName: "Heartfleet",
+        type: "Personal",
+        category: ["Full Stack", "Game Dev", "Web Dev"],
+        shortDescription:
+            "A multiplayer Battleship-inspired web game that combines strategic naval combat with meaningful social interactions.",
+        websiteLink: "",
+        githubLink: "",
+        techStack: [
+            "React",
+            "Next.js",
+            "PostgreSQL",
+            "Supabase",
+            "Vercel",
+        ],
+        startDate: new Date("2026-10-28"),
+        endDate: new Date(),
+        companyLogoImg: "/projects/heartfleet/logo.png",
+        pagesInfoArr: [],
+        descriptionDetails: {
+            paragraphs: [
+                "Heartfleet is a multiplayer web-based game that combines classic Battleship mechanics with a unique social interaction system. Designed around a competitive yet wholesome experience, the game encourages players to connect through meaningful conversations while engaging in strategic naval combat.",
+
+                "Built using Next.js, React, TypeScript, and Supabase, the project explores multiplayer game architecture, player authentication, room management, and database-driven gameplay. Its distinctive Heartbeat system introduces curated and player-written questions at special moments, creating a balance between competitive gameplay and personal interaction."
+            ],
+            bullets: [
+                "Designed a multiplayer Battleship-inspired game that preserves traditional naval combat mechanics while introducing social interaction elements.",
+                "Developed the full-stack application architecture using Next.js, React, TypeScript, and Supabase.",
+                "Implemented player authentication and multiplayer room management functionality.",
+                "Designed a Heartbeat interaction system featuring curated and custom player-written questions.",
+                "Established gameplay mechanics around Hearts, special interaction moments, and a Gentle Comeback system.",
+                "Designed a responsive multiplayer experience intended for 30–45 minute gameplay sessions.",
+                "Structured the application around database-driven game sessions, player interactions, and room management."
+            ]
+        },
+    },
+    {
         id: "surprises",
         companyName: "My Little Surprises",
         type: "Personal",
