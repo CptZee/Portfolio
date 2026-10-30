@@ -15,6 +15,7 @@ export interface ExperienceInterface {
 }
 
 export const experiences: ExperienceInterface[] = [
+
     {
         id: "cmd",
         position: "Game Developer",
@@ -23,19 +24,32 @@ export const experiences: ExperienceInterface[] = [
         startDate: new Date("2024-07-01"),
         endDate: "Present",
         description: [
-            "Contributed to the development of Fallen Tear: The Ascension, a Metroidvania, by implementing and maintaining gameplay systems that support core player progression, combat interactions, and world events.",
-            "Developed features in Unity using C#, collaborating closely with game designers, artists, and fellow programmers to transform design specifications and gameplay concepts into production-ready systems.",
-            "Focused on building scalable, maintainable, and performance-conscious solutions while troubleshooting complex gameplay issues, optimizing existing systems, and supporting ongoing content development throughout the project lifecycle."
+            "Contribute to the development of Fallen Tear: The Ascension, a 2D Metroidvania game, primarily focusing on gameplay features, environmental mechanics, quest progression, and scripted events using Unity and C#.",
+
+            "Implement environmental puzzles, hazards, interactive sequences, and event-driven gameplay features, translating game design specifications into functional experiences while integrating them with existing systems.",
+
+            "Support other areas of development through audio integration, bug fixing, optimization of existing systems, and cross-department collaboration, including technical requests from the Technical Art team."
         ],
         achievements: [
-            "Developed and maintained gameplay systems in Unity using C#, quest systems, NPC interactions, and event-driven gameplay features.",
-            "Implemented modular and reusable game architecture to support rapid content iteration and long-term maintainability.",
-            "Optimized gameplay code and runtime systems to reduce performance bottlenecks and improve frame-time stability across target platforms.",
-            "Debugged and resolved complex engine, gameplay, and state-management issues using Unity profiling, logging, and diagnostic tools.",
-            "Designed and implemented custom tools and editor workflows to streamline content creation and improve development efficiency.",
-            "Integrated gameplay systems with animation, audio, and narrative pipelines to ensure seamless player experiences.",
-            "Collaborated with designers and developers using Miro-based game design documentation to translate gameplay concepts into production-ready features.",
-            "Managed feature development and bug-fixing workflows through ClickUp, participating in sprint planning, task estimation, and milestone tracking."
+            "Developed and implemented environmental puzzles, interactive gameplay mechanics, and scripted events using Unity and C#.",
+
+            "Implemented environmental hazards and dynamic gameplay interactions, including wind mechanics, sand drill worm spawning, and rain-related events.",
+
+            "Developed and maintained quest progression logic and event triggers to support gameplay objectives and narrative progression.",
+
+            "Implemented scripted sequences that coordinate environmental interactions, gameplay triggers, and progression events.",
+
+            "Integrated background music (BGM), sound effects (SFX), and voice-overs (VO) into gameplay features, environmental interactions, and scripted events.",
+
+            "Modified, maintained, and optimized existing gameplay systems to improve efficiency, reliability, and compatibility with new gameplay requirements.",
+
+            "Investigated and resolved gameplay bugs and technical issues, including problems involving systems maintained by other developers.",
+
+            "Collaborated with other development departments, including Technical Art, to implement requested functionality, resolve integration issues, and support content development.",
+
+            "Collaborated with designers and developers using Miro-based documentation to understand gameplay requirements and translate design concepts into functional features.",
+
+            "Managed assigned gameplay features, technical requests, and bug fixes through ClickUp to support development milestones and team coordination."
         ],
         skills: ["Unity", "Git", "Miro", "ClickUp", "C#"],
         companyUrl: "https://www.thecmdstudios.com/",
