@@ -1,11 +1,11 @@
 import "server-only";
 import { getDatabase } from "@/lib/database";
-import { decodeProjects, type ProjectRow } from "@/lib/project-content";
+import { decodeProjects, projectColumns, type ProjectRow, type ProjectPageRow } from "@/lib/project-content";
 import { sealProjectQuery } from "@/lib/project-realtime";
 
 async function getProjectRows(): Promise<ProjectRow[]> {
     const sql = getDatabase();
-    return await sql`SELECT id, content, sort_order FROM portfolio_projects WHERE published = true ORDER BY sort_order ASC, id ASC` as ProjectRow[];
+    return await sql.query(`SELECT ${projectColumns} FROM portfolio_projects WHERE published = true ORDER BY sort_order ASC, id ASC`) as ProjectRow[];
 }
 
 export function projectStorageBase() {
@@ -13,7 +13,12 @@ export function projectStorageBase() {
 }
 
 export async function getProjects() {
-    return decodeProjects(await getProjectRows(), projectStorageBase());
+    const sql = getDatabase();
+    const [rows, pages] = await Promise.all([
+        getProjectRows(),
+        sql`SELECT p.project_id, p.title, p.description, p.image_assets FROM portfolio_project_pages p JOIN portfolio_projects project ON project.id = p.project_id WHERE project.published = true ORDER BY p.sort_order, p.id`,
+    ]);
+    return decodeProjects(rows, projectStorageBase(), pages as ProjectPageRow[]);
 }
 
 export async function getProjectFeed() {

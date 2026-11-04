@@ -1,10 +1,10 @@
 import "server-only";
 import { createRealtime, rawSql } from "@neon/realtime/server";
-import type { ProjectRow } from "@/lib/project-content";
+import { projectColumns, type ProjectRow } from "@/lib/project-content";
 
 export function projectLiveQuery() {
     // Public portfolio only: no client-supplied SQL, draft rows, or private fields.
-    return rawSql<ProjectRow>("SELECT id, content, sort_order FROM public.portfolio_projects WHERE published = true ORDER BY sort_order ASC, id ASC");
+    return rawSql<ProjectRow>(`SELECT ${projectColumns} FROM public.portfolio_projects WHERE published = true ORDER BY sort_order ASC, id ASC`);
 }
 
 export async function sealProjectQuery() {

@@ -58,9 +58,8 @@ try {
     const baselineNavigations = navigations;
     console.log("PASS App: /projects server-renders all database projects with Fallen Tear first.");
 
-    const [template] = await sql`SELECT content FROM portfolio_projects WHERE id = 'heartfleet'`;
-    const content = { ...template.content, companyName: title, companyLogoImg: `storage:${key}`, shortDescription: "Temporary Neon integration verification project." };
-    await sql`INSERT INTO portfolio_projects (id, content, sort_order, published) VALUES (${id}, ${JSON.stringify(content)}::jsonb, 99999, false)`;
+    await sql`INSERT INTO portfolio_projects (id, project_type, company_name, categories, short_description, website_url, github_url, technologies, start_date, end_date, cover_asset, description_paragraphs, description_bullets, sort_order, published)
+        SELECT ${id}, project_type, ${title}, categories, 'Temporary Neon integration verification project.', website_url, github_url, technologies, start_date, end_date, ${`storage:${key}`}, description_paragraphs, description_bullets, 99999, false FROM portfolio_projects WHERE id = 'heartfleet'`;
     inserted = true;
     const draftPage = await browser.newPage();
     await draftPage.goto(`${origin}/projects/${id}`);
@@ -81,13 +80,15 @@ try {
     console.log("PASS Realtime + Storage UI: newly published project and Neon-hosted cover appear without page reload.");
 
     const updatedTitle = `${title} updated`;
-    await sql`UPDATE portfolio_projects SET content = jsonb_set(content, '{companyName}', ${JSON.stringify(updatedTitle)}::jsonb) WHERE id = ${id}`;
+    await sql`UPDATE portfolio_projects SET company_name = ${updatedTitle} WHERE id = ${id}`;
+    await sql`INSERT INTO portfolio_project_pages(project_id, title, image_assets, sort_order) VALUES (${id}, 'Gallery preview', ARRAY[${`storage:${key}`}], 0)`;
     await page.getByRole("heading", { name: updatedTitle, exact: true }).waitFor({ state: "attached", timeout: 30000 });
     assert.equal(navigations, baselineNavigations);
     const detail = await browser.newPage();
     const detailResponse = await detail.goto(`${origin}/projects/${id}`, { waitUntil: "networkidle" });
     assert.equal(detailResponse.status(), 200);
     assert.ok((await detail.locator("h1").textContent()).includes(updatedTitle));
+    await detail.getByRole("heading", { name: "Gallery preview", exact: true }).waitFor();
     await detail.close();
     console.log("PASS Postgres + App: live title edit and newly created detail page reflect the database.");
 
@@ -114,15 +115,13 @@ try {
     assert.ok(await companyLogo.evaluate(img => img.naturalWidth > 0));
     console.log("PASS Experiences: database timeline and migrated Neon-hosted company logo render.");
 
-    const [experienceTemplate] = await sql`SELECT content FROM portfolio_experiences WHERE id = 'cmd'`;
-    const [serviceTemplate] = await sql`SELECT content FROM portfolio_services WHERE id = 'personal-website'`;
     const experienceTitle = `Database experience ${id}`;
     const serviceTitle = `Database service ${id}`;
-    const experienceContent = { ...experienceTemplate.content, position: experienceTitle };
-    const serviceContent = { ...serviceTemplate.content, name: serviceTitle, price: 4321 };
     await sql.transaction([
-        sql`INSERT INTO portfolio_experiences (id, content, sort_order, published) VALUES (${id}, ${JSON.stringify(experienceContent)}::jsonb, 0, false)`,
-        sql`INSERT INTO portfolio_services (id, content, sort_order, published) VALUES (${id}, ${JSON.stringify(serviceContent)}::jsonb, 0, false)`,
+        sql`INSERT INTO portfolio_experiences (id, position, company, location, start_date, end_date, description_paragraphs, achievements, skills, company_url, logo_asset, sort_order, published)
+            SELECT ${id}, ${experienceTitle}, company, location, start_date, end_date, description_paragraphs, achievements, skills, company_url, logo_asset, 0, false FROM portfolio_experiences WHERE id = 'cmd'`,
+        sql`INSERT INTO portfolio_services (id, name, tagline, category, starting_price, timeline, features, example_url, example_label, sort_order, published)
+            SELECT ${id}, ${serviceTitle}, tagline, category, 4321, timeline, features, example_url, example_label, 0, false FROM portfolio_services WHERE id = 'personal-website'`,
     ]);
     contentInserted = true;
     await page.goto(`${origin}/services`, { waitUntil: "networkidle" });
