@@ -2,9 +2,15 @@
 
 import { GridScan } from "../ui/gridscan";
 import { useTheme } from "next-themes";
+import { useSyncExternalStore } from "react";
+
+const subscribe = () => () => {};
 
 export function AnimatedHero() {
     const { resolvedTheme } = useTheme();
+    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
+
+    if (!mounted) return null;
 
     if (resolvedTheme === "light" || resolvedTheme === "retro"
         || resolvedTheme === "paper"

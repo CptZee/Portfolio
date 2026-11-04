@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import ChipContainer from "@/components/ui/chip-container";
 import { ResponsiveTabs } from "@/components/ui/responsive-tabs";
-import { experiences } from "@/constants/Experiences";
+import { getExperiences } from "@/lib/experiences";
 import { siteConfig } from "@/constants/Site";
 
 interface ExperienceDetailPageProps {
@@ -39,7 +39,7 @@ export async function generateMetadata({
     params,
 }: ExperienceDetailPageProps): Promise<Metadata> {
     const { expId } = await params;
-    const experience = experiences.find((c) => c.id === expId);
+    const experience = (await getExperiences()).find((c) => c.id === expId);
 
     if (!experience) {
         return {
@@ -60,7 +60,7 @@ export default async function ExperienceDetailPage({
     params,
 }: ExperienceDetailPageProps) {
     const { expId } = await params;
-    const experience = experiences.find((c) => c.id === expId);
+    const experience = (await getExperiences()).find((c) => c.id === expId);
 
     if (!experience) {
         redirect("/experience");

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Icons } from "../common/icons";
 import { Button } from "@/components/ui/button";
 import ChipContainer from "@/components/ui/chip-container";
-import { ProjectInterface } from "@/constants/Projects";
+import type { ProjectInterface } from "@/types/portfolio";
 import { WobbleCard } from "@/components/ui/wobble-card";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 
@@ -33,6 +33,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 />
             </WobbleCard>
             <div className="pt-5 space-y-3 flex flex-col flex-grow">
+                {project.id === "fallen-tear" && (
+                    <span className="w-fit rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">Flagship · Professional work</span>
+                )}
                 <h5 className="text-2xl font-bold tracking-tight text-foreground">
                     {project.companyName}
                 </h5>

@@ -1,10 +1,13 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { connection } from "next/server";
+import { getServices } from "@/lib/services";
+import { formatServicePrice } from "@/lib/service-content";
 
 import { cn } from "@/lib/utils";
-import { featuredProjects } from "@/constants/Projects";
-import { experiences } from "@/constants/Experiences";
+import { getProjectFeed } from "@/lib/projects";
+import { getExperiences } from "@/lib/experiences";
 import { featuredSkills } from "@/constants/Skills";
 import { AnimatedSection } from "@/components/common/animated-section";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -13,7 +16,7 @@ import { ClientPageWrapper } from "@/components/common/client-page-wrapper";
 import { pagesConfig } from "@/constants/Pages";
 import { Icons } from "@/components/common/icons";
 
-import ProjectCard from "@/components/projects/project-card";
+import { ProjectFeed } from "@/components/projects/project-feed";
 import ExperienceCard from "@/components/experience/experience-card";
 import SkillsCard from "@/components/skill/skills-card";
 import profileImg from "@/public/profile-img.png";
@@ -25,7 +28,9 @@ export const metadata: Metadata = {
     "Aaron James R. Mission - Software Engineer building scalable applications, backend systems, and seamless user experiences.",
 };
 
-export default function Home() {
+export default async function Home() {
+  await connection();
+  const [services, feed, experiences] = await Promise.all([getServices(), getProjectFeed(), getExperiences()]);
   return (
     <ClientPageWrapper>
       <section className="relative w-screen h-screen overflow-hidden flex items-center -ml-[calc(50vw-50%)]">
@@ -77,7 +82,7 @@ export default function Home() {
               </AnimatedText>
               <AnimatedText delay={0.8}>
                 <Link
-                  href={"/contact"}
+                  href={"/services"}
                   rel="noreferrer"
                   className={cn(
                     buttonVariants({
@@ -85,9 +90,9 @@ export default function Home() {
                       size: "lg",
                     })
                   )}
-                  aria-label="Contact Aaron James Mission"
+                  aria-label="Explore website services"
                 >
-                  <Icons.contact className="w-4 h-4 mr-2" /> Contact
+                  <Icons.contact className="w-4 h-4 mr-2" /> Work with me
                 </Link>
               </AnimatedText>
             </div>
@@ -119,18 +124,7 @@ export default function Home() {
           </AnimatedText>
         </div>
         <div className="w-full">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full items-stretch">
-            {featuredProjects.map((exp, index) => (
-              <AnimatedSection
-                key={exp.id}
-                delay={0.1 * (index + 1)}
-                direction="up"
-                className="h-full w-full min-w-0"
-              >
-                <ProjectCard project={exp} />
-              </AnimatedSection>
-            ))}
-          </div>
+          <ProjectFeed {...feed} featured />
         </div>
         <AnimatedText delay={0.4} className="flex justify-center">
           <Link href="/projects">
@@ -139,6 +133,54 @@ export default function Home() {
             </Button>
           </Link>
         </AnimatedText>
+      </AnimatedSection>
+
+      <AnimatedSection
+        direction="up"
+        className="container space-y-6 py-10 my-14"
+        id="services"
+      >
+        <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
+          <AnimatedText as="h2" className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
+            Websites made for you
+          </AnimatedText>
+          <AnimatedText as="p" delay={0.2} className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
+            From a thoughtful digital gift to your next online business. Find a starting point and let&apos;s bring your idea to life.
+          </AnimatedText>
+        </div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          {services.map((service, index) => (
+            <AnimatedSection key={service.id} delay={0.1 * (index + 1)} direction="up" className="h-full">
+              <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-6 text-card-foreground sm:p-8">
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{service.category}</p>
+                <h3 className="mt-4 font-heading text-2xl">{service.name}</h3>
+                <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">{service.tagline}</p>
+                <div className="my-6 border-y border-border py-5">
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Starting at</p>
+                  <p className="mt-1 font-heading text-4xl">{formatServicePrice(service.price)}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{service.timeline}</p>
+                </div>
+                <ul className="mb-6 space-y-3 text-sm">
+                  {service.features.slice(0, 3).map(feature => (
+                    <li key={feature} className="flex gap-3">
+                      <Icons.check aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href={`/services#${service.id}`} aria-label={`Explore ${service.name}`} className={cn(buttonVariants({ variant: "outline" }), "mt-auto w-full")}>
+                  Explore package <Icons.arrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
+                </Link>
+              </article>
+            </AnimatedSection>
+          ))}
+        </div>
+        <p className="text-center text-sm leading-6 text-muted-foreground">Prices are in PHP. Final quotes depend on scope; domain, hosting, and ongoing costs are separate.</p>
+        <div className="flex justify-center">
+          <Link href="/services#project-brief" className={cn(buttonVariants({ size: "lg" }))}>
+            Let&apos;s discuss your project <Icons.arrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
+          </Link>
+        </div>
       </AnimatedSection>
 
       <AnimatedSection

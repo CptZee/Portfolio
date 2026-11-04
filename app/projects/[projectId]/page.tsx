@@ -7,7 +7,7 @@ import ProjectDescription from "@/components/projects/project-description";
 import { buttonVariants } from "@/components/ui/button";
 import ChipContainer from "@/components/ui/chip-container";
 import CustomTooltip from "@/components/ui/custom-tooltip";
-import { Projects } from "@/constants/Projects";
+import { getProjects } from "@/lib/projects";
 import { siteConfig } from "@/constants/Site";
 import { cn, formatDateFromObj } from "@/lib/utils";
 import profileImg from "@/public/profile-img.png";
@@ -20,7 +20,7 @@ interface ProjectPageProps {
 
 export default async function Project({ params }: ProjectPageProps) {
     const { projectId } = await params;
-    let project = Projects.find((val) => val.id === projectId);
+    const project = (await getProjects()).find((val) => val.id === projectId);
     if (!project) {
         redirect("/projects");
     }

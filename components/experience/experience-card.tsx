@@ -6,7 +6,7 @@ import React from "react";
 
 import { Icons } from "../common/icons";
 import { Button } from "@/components/ui/button";
-import { ExperienceInterface } from "@/constants/Experiences";
+import type { ExperienceInterface } from "@/types/portfolio";
 
 // Helper function to extract year from date
 const getYearFromDate = (date: Date): string => {

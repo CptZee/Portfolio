@@ -2,7 +2,8 @@ import { Metadata } from "next";
 
 import PageContainer from "@/components/common/page-container";
 import Timeline from "@/components/experience/timeline";
-import { experiences } from "@/constants/Experiences";
+import { getExperiences } from "@/lib/experiences";
+import { connection } from "next/server";
 import { pagesConfig } from "@/constants/Pages";
 import { siteConfig } from "@/constants/Site";
 
@@ -21,7 +22,9 @@ export const metadata: Metadata = {
     },
 };
 
-export default function ExperiencePage() {
+export default async function ExperiencePage() {
+    await connection();
+    const experiences = await getExperiences();
     return (
         <PageContainer
             title={pagesConfig.experience.title}

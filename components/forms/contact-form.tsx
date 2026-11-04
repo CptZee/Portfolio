@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Icons } from "@/components/common/icons";
+import { useState } from "react";
+import { serviceEmail } from "@/lib/service-inquiry";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -16,7 +17,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useModalStore } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
     name: z.string().min(3, {
@@ -30,7 +30,7 @@ const formSchema = z.object({
 });
 
 export function ContactForm() {
-    const storeModal = useModalStore();
+    const [emailOpened, setEmailOpened] = useState(false);
 
     // const [open, setOpen] = useState(false);
 
@@ -46,28 +46,9 @@ export function ContactForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-            const response = await fetch("/api/contact", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values),
-            });
-
-            form.reset();
-
-            if (response.status === 200) {
-                storeModal.onOpen({
-                    title: "Thankyou!",
-                    description:
-                        "Your message has been received! I appreciate your contact and will get back to you shortly.",
-                    icon: Icons.successAnimated,
-                });
-            }
-        } catch (err) {
-            console.log("Err!", err);
-        }
+        const body = `Name: ${values.name}\nEmail: ${values.email}\nSocial: ${values.social || "Not provided"}\n\n${values.message}`;
+        window.location.href = `mailto:${serviceEmail}?subject=${encodeURIComponent("Portfolio inquiry")}&body=${encodeURIComponent(body)}`;
+        setEmailOpened(true);
     }
 
     return (
@@ -128,7 +109,9 @@ export function ContactForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                <p className="text-sm text-muted-foreground">This opens your email app. Send the prepared message there to contact me. You can also email <a className="underline" href={`mailto:${serviceEmail}`}>{serviceEmail}</a>.</p>
+                {emailOpened && <p role="status" className="text-sm">Please send the message in your email app to complete your inquiry. Your form stays here if you need to try again.</p>}
+                <Button type="submit">Open message in email app</Button>
             </form>
         </Form>
     );

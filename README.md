@@ -29,7 +29,7 @@ My development journey started with game development and expanded into full-stac
 - Unity
 - Unity 2D & 3D
 - Gameplay Programming
-- AI Systems
+- NPC Behavior Systems
 - Scriptable Objects
 - State Machines
 

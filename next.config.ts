@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: process.env.AWS_ENDPOINT_URL_S3 ? [{
+      protocol: "https",
+      hostname: new URL(process.env.AWS_ENDPOINT_URL_S3).hostname,
+      pathname: "/assets/**",
+    }] : [],
+  },
   async headers() {
     return [
       {
