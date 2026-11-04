@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Gamepad2, Laptop, Smartphone } from "lucide-react";
 import { connection } from "next/server";
 import { getServices } from "@/lib/services";
 import { formatServicePrice } from "@/lib/service-content";
@@ -31,6 +32,12 @@ export const metadata: Metadata = {
 export default async function Home() {
   await connection();
   const [services, feed, experiences] = await Promise.all([getServices(), getProjectFeed(), getExperiences()]);
+  const serviceCategories = [
+    { id: "websites", title: "Websites", description: "Personal gifts, business websites, and online stores.", categories: ["Personal", "Business", "Commerce"], icon: Laptop },
+    { id: "games", title: "Games", description: "From testing a gameplay idea to a small complete game.", categories: ["Games"], icon: Gamepad2 },
+    { id: "mobile", title: "Mobile Apps", description: "Prototypes, focused MVPs, and small complete apps.", categories: ["Mobile"], icon: Smartphone },
+  ].map(category => ({ ...category, packages: services.filter(service => category.categories.includes(service.category)) }))
+    .filter(category => category.packages.length > 0);
   return (
     <ClientPageWrapper>
       <section className="relative w-screen h-screen overflow-hidden flex items-center -ml-[calc(50vw-50%)]">
@@ -142,34 +149,25 @@ export default async function Home() {
       >
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
           <AnimatedText as="h2" className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
-            Websites made for you
+            Websites, games &amp; apps made for you
           </AnimatedText>
           <AnimatedText as="p" delay={0.2} className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            From a thoughtful digital gift to your next online business. Find a starting point and let&apos;s bring your idea to life.
+            From a thoughtful digital gift to your next online business, game, or mobile app. Find a starting point and let&apos;s bring your idea to life.
           </AnimatedText>
         </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {services.map((service, index) => (
-            <AnimatedSection key={service.id} delay={0.1 * (index + 1)} direction="up" className="h-full">
+          {serviceCategories.map((category, index) => (
+            <AnimatedSection key={category.id} delay={0.1 * (index + 1)} direction="up" className="h-full">
               <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-6 text-card-foreground sm:p-8">
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{service.category}</p>
-                <h3 className="mt-4 font-heading text-2xl">{service.name}</h3>
-                <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">{service.tagline}</p>
-                <div className="my-6 border-y border-border py-5">
+                <category.icon aria-hidden="true" className="h-8 w-8 text-muted-foreground" strokeWidth={1.5} />
+                <h3 className="mt-4 font-heading text-2xl">{category.title}</h3>
+                <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">{category.description}</p>
+                <div className="my-6">
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">Starting at</p>
-                  <p className="mt-1 font-heading text-4xl">{formatServicePrice(service.price)}</p>
-                  <p className="mt-2 text-sm text-muted-foreground">{service.timeline}</p>
+                  <p className="mt-1 font-heading text-3xl">{formatServicePrice(Math.min(...category.packages.map(service => service.price)))}</p>
                 </div>
-                <ul className="mb-6 space-y-3 text-sm">
-                  {service.features.slice(0, 3).map(feature => (
-                    <li key={feature} className="flex gap-3">
-                      <Icons.check aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href={`/services#${service.id}`} aria-label={`Explore ${service.name}`} className={cn(buttonVariants({ variant: "outline" }), "mt-auto w-full")}>
-                  Explore package <Icons.arrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
+                <Link href={`/services#${category.id}`} aria-label={`Explore ${category.title} packages`} className={cn(buttonVariants({ variant: "outline" }), "mt-auto w-full")}>
+                  Explore packages <Icons.arrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
                 </Link>
               </article>
             </AnimatedSection>

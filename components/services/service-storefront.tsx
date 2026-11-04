@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
-import { ArrowRight, Check, Heart, ShoppingBag, Store, Loader2, Mail } from "lucide-react";
+import { ArrowRight, Check, Heart, ShoppingBag, Store, Loader2, Mail, Gamepad2, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -51,15 +51,24 @@ export function ServiceStorefront({ services }: { services: readonly Service[] }
         } finally { setBusy(false); }
     }
 
+    const groups = services.reduce<Record<string, Service[]>>((result, item) => {
+        const group = ["Personal", "Business", "Commerce"].includes(item.category) ? "Websites" : item.category;
+        (result[group] ??= []).push(item);
+        return result;
+    }, {});
+
     return (
         <div className="space-y-16 pb-12">
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 <span className="rounded-full border border-border bg-muted px-4 py-2 text-foreground">Built by Aaron, for you</span>
                 <span>Custom design</span><span aria-hidden="true">·</span><span>Mobile-ready</span><span aria-hidden="true">·</span><span>Personal handover</span>
             </div>
-            <section aria-label="Website packages" className="grid gap-6 lg:grid-cols-3">
-                {services.map((item, index) => {
-                    const Icon = packageIcons[item.id] ?? Store;
+            <section aria-label="Development packages" className="space-y-12">
+                {Object.entries(groups).map(([group, items]) => <section key={group} id={group.toLowerCase().replace(/\s+/g, "-")} aria-label={`${group} packages`} className="scroll-mt-28 space-y-5">
+                <h2 className="font-heading text-3xl">{group}</h2>
+                <div className="grid gap-6 lg:grid-cols-3">
+                {items.map((item, index) => {
+                    const Icon = item.category === "Games" ? Gamepad2 : item.category === "Mobile" ? Smartphone : packageIcons[item.id] ?? Store;
                     return (
                         <article key={item.id} id={item.id} className="flex scroll-mt-28 flex-col overflow-hidden rounded-2xl border border-border bg-card text-card-foreground">
                             <div className="relative flex h-44 items-center justify-center overflow-hidden border-b border-border bg-muted">
@@ -69,7 +78,7 @@ export function ServiceStorefront({ services }: { services: readonly Service[] }
                                 <Icon aria-hidden="true" className="relative h-12 w-12" strokeWidth={1.25} />
                             </div>
                             <div className="flex flex-1 flex-col p-6">
-                                <h2 className="font-heading text-2xl">{item.name}</h2>
+                                <h3 className="font-heading text-2xl">{item.name}</h3>
                                 <p className="mt-2 min-h-12 text-sm leading-6 text-muted-foreground">{item.tagline}</p>
                                 <div className="my-6 border-y border-border py-5">
                                     <p className="text-xs uppercase tracking-widest text-muted-foreground">Starting at</p>
@@ -85,16 +94,18 @@ export function ServiceStorefront({ services }: { services: readonly Service[] }
                         </article>
                     );
                 })}
+                </div>
+                </section>)}
             </section>
-            <p className="!mt-5 max-w-3xl text-sm leading-6 text-muted-foreground">Starting prices are in Philippine pesos. Final pricing and delivery dates depend on your brief and content readiness. Domain, hosting, paid assets, ongoing maintenance, and payment-provider fees are quoted separately.</p>
+            <p className="!mt-5 max-w-3xl text-sm leading-6 text-muted-foreground">Starting prices are in Philippine pesos. Final pricing and delivery dates depend on your brief and content readiness. Domain, hosting, paid assets, ongoing maintenance, payment-provider fees, and app store or platform fees are quoted separately. Custom artwork, multiplayer, and additional backend integrations are scoped separately.</p>
             <section className="grid gap-8 rounded-2xl border border-border bg-muted/40 p-6 md:grid-cols-3 md:p-8" aria-label="How it works">
-                {[ ["01", "Share your idea", "Pick a package and tell me what you have in mind."], ["02", "Agree on the details", "We'll confirm the scope, timeline, quote, and payment schedule before work begins."], ["03", "Build, refine, launch", "Review the design, share your feedback, and get a website ready to make its debut."] ].map(([step, title, text]) => <div key={step}><p className="text-sm text-muted-foreground">{step}</p><h2 className="mt-2 font-heading text-xl">{title}</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></div>)}
+                {[ ["01", "Share your idea", "Pick a package and tell me what you have in mind."], ["02", "Agree on the details", "We'll confirm the scope, timeline, quote, and payment schedule before work begins."], ["03", "Build, refine, launch", "Review the design, share your feedback, and get your project ready to make its debut."] ].map(([step, title, text]) => <div key={step}><p className="text-sm text-muted-foreground">{step}</p><h2 className="mt-2 font-heading text-xl">{title}</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></div>)}
             </section>
             <section id="project-brief" className="grid scroll-mt-28 gap-10 lg:grid-cols-[1fr_1.3fr]">
                 <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Your idea starts here</p>
                     <h2 className="mt-4 font-heading text-4xl">Tell me what you want to build.</h2>
-                    <p className="mt-4 leading-7 text-muted-foreground">A surprise for someone special? Your first online shop? Share a few details and we can figure out the right fit together.</p>
+                    <p className="mt-4 leading-7 text-muted-foreground">A surprise for someone special? Your first online shop, game, or mobile app? Share a few details and we can figure out the right fit together.</p>
                     <p className="mt-4 text-sm leading-6 text-muted-foreground">Send your brief through your email app. I'll confirm availability and a final quote with you before any work or payment.</p>
                     <a className="mt-6 inline-flex items-center gap-2 text-sm underline underline-offset-4" href={`mailto:${serviceEmail}`}><Mail className="h-4 w-4" />{serviceEmail}</a>
                 </div>

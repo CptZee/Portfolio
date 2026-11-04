@@ -24,6 +24,7 @@ let failure;
 
 try {
     const [counts] = await sql`SELECT count(*)::int AS count FROM portfolio_projects WHERE published = true`;
+    const [baselineServices] = await sql`SELECT count(*)::int AS count FROM portfolio_services WHERE published = true`;
     assert.ok(counts.count >= 14);
     console.log(`PASS Postgres: ${counts.count} published projects available.`);
     await files.upload(key, bytes, { contentType: "image/png" });
@@ -97,12 +98,12 @@ try {
     assert.equal(await page.locator("h5").first().textContent(), "Fallen Tear: The Ascension");
     assert.equal(await page.locator("#services article").count(), 3);
     assert.deepEqual(errors, []);
-    console.log("PASS Homepage: database flagship and three services render; no browser runtime errors.");
+    console.log("PASS Homepage: database flagship and three service category highlights render; no browser runtime errors.");
 
     const [experienceCount] = await sql`SELECT count(*)::int AS count FROM portfolio_experiences WHERE published = true`;
     const [serviceCount] = await sql`SELECT count(*)::int AS count FROM portfolio_services WHERE published = true`;
     assert.equal(experienceCount.count, 3);
-    assert.equal(serviceCount.count, 3);
+    assert.equal(serviceCount.count, baselineServices.count);
     await page.goto(`${origin}/experience`, { waitUntil: "networkidle" });
     await page.getByRole("heading", { name: "Game Developer", exact: true }).waitFor();
     const companyLogo = page.getByRole("img", { name: "The CMD Studios", exact: true });
@@ -144,9 +145,10 @@ try {
     await page.goto(`${origin}/experience`, { waitUntil: "networkidle" });
     await page.getByRole("heading", { name: experienceTitle, exact: true }).waitFor();
     await page.goto(origin, { waitUntil: "networkidle" });
-    await page.getByRole("heading", { name: serviceTitle, exact: true }).waitFor();
+    assert.equal(await page.getByRole("heading", { name: serviceTitle, exact: true }).count(), 0);
+    assert.ok((await page.locator("#services article").first().textContent()).includes("4,321"));
     await page.getByRole("heading", { name: experienceTitle, exact: true }).waitFor();
-    console.log("PASS Database edits: new experience detail, metadata, timeline, and homepage content appear without rebuilding.");
+    console.log("PASS Database edits: new experience content and category starting price appear on homepage without rebuilding.");
     await sql.transaction([
         sql`UPDATE portfolio_experiences SET published = false WHERE id = ${id}`,
         sql`UPDATE portfolio_services SET published = false WHERE id = ${id}`,
