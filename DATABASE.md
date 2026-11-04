@@ -1,6 +1,6 @@
 # Portfolio database
 
-The app is linked to Neon project `divine-bread-63277438`, production branch, in `org-wispy-darkness-49680098`. Postgres stores structured portfolio data, the public `assets` bucket stores images, and Realtime streams published project rows. The Next.js frontend is hosted separately.
+Postgres stores structured portfolio data, a public object-storage bucket stores images, and Realtime streams published project rows. The frontend is hosted separately. Project and organization identifiers belong in local connection settings, not this documentation.
 
 ## Tables and columns
 
@@ -13,7 +13,7 @@ The app is linked to Neon project `divine-bread-63277438`, production branch, in
 
 The three main tables also have `id`, `sort_order`, `published`, `created_at`, and `updated_at`. Array fields use native PostgreSQL `text[]`; prices use nonnegative `numeric(12,2)` in PHP; dates use `timestamptz`. An experience with NULL `end_date` is displayed as Present. Projects enforce valid categories/types and nondecreasing dates. Gallery pages reference a project through a foreign key and are deleted with their parent.
 
-The app reads only explicit columns. All 14 projects, 3 experiences, and 11 service rows (9 published, 2 older unpublished packages) were migrated and field-by-field verified on an isolated production-data branch first. Data, publication settings, ordering, and storage keys were preserved.
+The app reads explicit columns. Migrations are verified on an isolated branch before being applied to the target database, preserving data, publication settings, ordering, and storage keys.
 
 ## Manage content
 
