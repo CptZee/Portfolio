@@ -6,6 +6,8 @@ import { getExperiences } from "@/lib/experiences";
 import { connection } from "next/server";
 import { pagesConfig } from "@/constants/Pages";
 import { siteConfig } from "@/constants/Site";
+import { Suspense } from "react";
+import { SectionLoading } from "@/components/common/page-loading";
 
 export const metadata: Metadata = {
     title: `${pagesConfig.experience.metadata.title} | Professional Experience Timeline`,
@@ -22,15 +24,21 @@ export const metadata: Metadata = {
     },
 };
 
-export default async function ExperiencePage() {
+async function ExperienceContent() {
     await connection();
     const experiences = await getExperiences();
+    return <Timeline experiences={experiences} />;
+}
+
+export default function ExperiencePage() {
     return (
         <PageContainer
             title={pagesConfig.experience.title}
             description={pagesConfig.experience.description}
         >
-            <Timeline experiences={experiences} />
+            <Suspense fallback={<SectionLoading label="Loading experience" variant="timeline" />}>
+                <ExperienceContent />
+            </Suspense>
         </PageContainer>
     );
 }

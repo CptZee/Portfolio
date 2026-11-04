@@ -1,14 +1,12 @@
+import { Suspense } from "react";
+import { SectionLoading } from "@/components/common/page-loading";
+import { FeaturedProjects, ServiceHighlights, FeaturedExperience } from "@/components/home/database-sections";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Gamepad2, Laptop, Smartphone } from "lucide-react";
-import { connection } from "next/server";
-import { getServices } from "@/lib/services";
-import { formatServicePrice } from "@/lib/service-content";
 
 import { cn } from "@/lib/utils";
-import { getProjectFeed } from "@/lib/projects";
-import { getExperiences } from "@/lib/experiences";
+
 import { featuredSkills } from "@/constants/Skills";
 import { AnimatedSection } from "@/components/common/animated-section";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -17,8 +15,6 @@ import { ClientPageWrapper } from "@/components/common/client-page-wrapper";
 import { pagesConfig } from "@/constants/Pages";
 import { Icons } from "@/components/common/icons";
 
-import { ProjectFeed } from "@/components/projects/project-feed";
-import ExperienceCard from "@/components/experience/experience-card";
 import SkillsCard from "@/components/skill/skills-card";
 import profileImg from "@/public/profile-img.png";
 import { AnimatedHero } from "@/components/common/animated-hero";
@@ -29,15 +25,7 @@ export const metadata: Metadata = {
     "Aaron James R. Mission - Software Engineer building scalable applications, backend systems, and seamless user experiences.",
 };
 
-export default async function Home() {
-  await connection();
-  const [services, feed, experiences] = await Promise.all([getServices(), getProjectFeed(), getExperiences()]);
-  const serviceCategories = [
-    { id: "websites", title: "Websites", description: "Personal gifts, business websites, and online stores.", categories: ["Personal", "Business", "Commerce"], icon: Laptop },
-    { id: "games", title: "Games", description: "From testing a gameplay idea to a small complete game.", categories: ["Games"], icon: Gamepad2 },
-    { id: "mobile", title: "Mobile Apps", description: "Prototypes, focused MVPs, and small complete apps.", categories: ["Mobile"], icon: Smartphone },
-  ].map(category => ({ ...category, packages: services.filter(service => category.categories.includes(service.category)) }))
-    .filter(category => category.packages.length > 0);
+export default function Home() {
   return (
     <ClientPageWrapper>
       <section className="relative w-screen h-screen overflow-hidden flex items-center -ml-[calc(50vw-50%)]">
@@ -131,7 +119,7 @@ export default async function Home() {
           </AnimatedText>
         </div>
         <div className="w-full">
-          <ProjectFeed {...feed} featured />
+          <Suspense fallback={<SectionLoading label="Loading projects" />}><FeaturedProjects /></Suspense>
         </div>
         <AnimatedText delay={0.4} className="flex justify-center">
           <Link href="/projects">
@@ -155,24 +143,7 @@ export default async function Home() {
             From a thoughtful digital gift to your next online business, game, or mobile app. Find a starting point and let&apos;s bring your idea to life.
           </AnimatedText>
         </div>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {serviceCategories.map((category, index) => (
-            <AnimatedSection key={category.id} delay={0.1 * (index + 1)} direction="up" className="h-full">
-              <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-6 text-card-foreground sm:p-8">
-                <category.icon aria-hidden="true" className="h-8 w-8 text-muted-foreground" strokeWidth={1.5} />
-                <h3 className="mt-4 font-heading text-2xl">{category.title}</h3>
-                <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">{category.description}</p>
-                <div className="my-6">
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Starting at</p>
-                  <p className="mt-1 font-heading text-3xl">{formatServicePrice(Math.min(...category.packages.map(service => service.price)))}</p>
-                </div>
-                <Link href={`/services#${category.id}`} aria-label={`Explore ${category.title} packages`} className={cn(buttonVariants({ variant: "outline" }), "mt-auto w-full")}>
-                  Explore packages <Icons.arrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
-                </Link>
-              </article>
-            </AnimatedSection>
-          ))}
-        </div>
+        <Suspense fallback={<SectionLoading label="Loading service packages" />}><ServiceHighlights /></Suspense>
         <p className="text-center text-sm leading-6 text-muted-foreground">Prices are in PHP. Final quotes depend on scope; domain, hosting, and ongoing costs are separate.</p>
         <div className="flex justify-center">
           <Link href="/services#project-brief" className={cn(buttonVariants({ size: "lg" }))}>
@@ -201,17 +172,7 @@ export default async function Home() {
             {pagesConfig.experience.description}
           </AnimatedText>
         </div>
-        <div className="mx-auto grid justify-center gap-4 md:w-full lg:grid-cols-3">
-          {experiences.slice(0, 3).map((experience, index) => (
-            <AnimatedSection
-              key={experience.id}
-              delay={0.1 * (index + 1)}
-              direction="up"
-            >
-              <ExperienceCard experience={experience} />
-            </AnimatedSection>
-          ))}
-        </div>
+        <Suspense fallback={<SectionLoading label="Loading experience" variant="timeline" />}><FeaturedExperience /></Suspense>
         <AnimatedText delay={0.4} className="flex justify-center">
           <Link href="/experience">
             <Button variant={"outline"} className="rounded-xl">

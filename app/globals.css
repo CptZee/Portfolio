@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes page-loading-progress {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(400%); }
+}
+
+.page-loading-progress {
+  animation: page-loading-progress 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-loading-progress { animation: none; width: 100%; }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

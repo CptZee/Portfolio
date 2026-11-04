@@ -62,8 +62,10 @@ try {
     const content = { ...template.content, companyName: title, companyLogoImg: `storage:${key}`, shortDescription: "Temporary Neon integration verification project." };
     await sql`INSERT INTO portfolio_projects (id, content, sort_order, published) VALUES (${id}, ${JSON.stringify(content)}::jsonb, 99999, false)`;
     inserted = true;
-    const draftResponse = await page.request.get(`${origin}/projects/${id}`, { maxRedirects: 0 });
-    assert.equal(draftResponse.status(), 307);
+    const draftPage = await browser.newPage();
+    await draftPage.goto(`${origin}/projects/${id}`);
+    await draftPage.waitForURL(`${origin}/projects`);
+    await draftPage.close();
     assert.equal(await page.getByRole("heading", { name: title, exact: true }).count(), 0);
     console.log("PASS Draft isolation: unpublished project is absent from listing and detail route.");
 
@@ -125,8 +127,10 @@ try {
     contentInserted = true;
     await page.goto(`${origin}/services`, { waitUntil: "networkidle" });
     assert.equal(await page.getByRole("heading", { name: serviceTitle, exact: true }).count(), 0);
-    const draftExperience = await page.request.get(`${origin}/experience/${id}`, { maxRedirects: 0 });
-    assert.equal(draftExperience.status(), 307);
+    const draftExperience = await browser.newPage();
+    await draftExperience.goto(`${origin}/experience/${id}`);
+    await draftExperience.waitForURL(`${origin}/experience`);
+    await draftExperience.close();
     await sql.transaction([
         sql`UPDATE portfolio_experiences SET published = true WHERE id = ${id}`,
         sql`UPDATE portfolio_services SET published = true WHERE id = ${id}`,
