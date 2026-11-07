@@ -27,11 +27,13 @@ try {
     await page.getByRole("heading", { name: "Seller's Notebook", exact: true }).waitFor();
     await page.getByText("Flagship · Personal project", { exact: true }).waitFor();
     const gallery = page.getByRole("region", { name: "Seller's Notebook media gallery" });
-    assert.equal(await gallery.getByRole("button", { name: /^Show (image|video):/ }).count(), 5);
-    await gallery.getByRole("button", { name: "Expand image: Business overview", exact: true }).click();
+    assert.equal(await gallery.getByRole("button", { name: /^Show (image|video):/ }).count(), 6);
+    await gallery.getByRole("button", { name: "Expand image: Seller's Notebook brand preview", exact: true }).click();
     await page.getByRole("dialog").waitFor();
     await page.keyboard.press("Escape");
     await page.getByRole("dialog").waitFor({ state: "detached" });
+    await gallery.getByRole("button", { name: "Next media", exact: true }).click();
+    await gallery.getByRole("img", { name: "Business overview", exact: true }).evaluate(img => img.decode());
     await gallery.getByRole("button", { name: "Next media", exact: true }).click();
     await gallery.getByRole("img", { name: "Inventory workspace", exact: true }).evaluate(img => img.decode());
     await gallery.getByRole("button", { name: "Show video: Product walkthrough", exact: true }).click();
@@ -45,7 +47,7 @@ try {
     await video.evaluate(element => element.pause());
     await gallery.getByRole("button", { name: "Previous media", exact: true }).click();
     assert.equal(await gallery.locator("video").count(), 0);
-    console.log("PASS Notebook gallery: five media items, image enlargement, previous/next selection, and real MP4 playback; no autoplay.");
+    console.log("PASS Notebook gallery: six media items, image enlargement, previous/next selection, and real MP4 playback; no autoplay.");
 
     await page.goto("http://localhost:3000/projects/fallen-tear", { waitUntil: "networkidle" });
     const gameGallery = page.getByRole("region", { name: "Fallen Tear: The Ascension media gallery" });
