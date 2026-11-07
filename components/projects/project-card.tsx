@@ -33,9 +33,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 />
             </WobbleCard>
             <div className="pt-5 space-y-3 flex flex-col flex-grow">
-                {project.id === "fallen-tear" && (
-                    <span className="w-fit rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">Flagship · Professional work</span>
-                )}
+                {project.badges.length > 0 && <div className="flex flex-wrap gap-2">{project.badges.map(badge => (
+                    <span key={badge} className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${project.isFlagship ? "bg-primary text-primary-foreground" : "border border-border bg-muted text-muted-foreground"}`}>{badge}</span>
+                ))}</div>}
                 <h5 className="text-2xl font-bold tracking-tight text-foreground">
                     {project.companyName}
                 </h5>

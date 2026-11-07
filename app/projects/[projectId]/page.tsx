@@ -7,7 +7,8 @@ import ProjectDescription from "@/components/projects/project-description";
 import { buttonVariants } from "@/components/ui/button";
 import ChipContainer from "@/components/ui/chip-container";
 import CustomTooltip from "@/components/ui/custom-tooltip";
-import { getProjects } from "@/lib/projects";
+import { getProject } from "@/lib/projects";
+import { ProjectGallery } from "@/components/projects/project-gallery";
 import { siteConfig } from "@/constants/Site";
 import { cn, formatDateFromObj } from "@/lib/utils";
 import profileImg from "@/public/profile-img.png";
@@ -20,7 +21,7 @@ interface ProjectPageProps {
 
 export default async function Project({ params }: ProjectPageProps) {
     const { projectId } = await params;
-    const project = (await getProjects()).find((val) => val.id === projectId);
+    const project = await getProject(projectId);
     if (!project) {
         redirect("/projects");
     }
@@ -39,7 +40,7 @@ export default async function Project({ params }: ProjectPageProps) {
             </Link>
             <div>
                 <time
-                    dateTime={Date.now().toString()}
+                    dateTime={project.startDate.toISOString()}
                     className="block text-sm text-muted-foreground"
                 >
                     {formatDateFromObj(project.startDate)}
@@ -64,6 +65,7 @@ export default async function Project({ params }: ProjectPageProps) {
                     </div>
                 </h1>
                 <ChipContainer textArr={project.category} />
+                {project.badges.length > 0 && <div className="mt-3 flex flex-wrap gap-2">{project.badges.map(badge => <span key={badge} className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">{badge}</span>)}</div>}
                 <div className="mt-4 flex space-x-4">
                     <Link
                         href={siteConfig.links.github}
@@ -87,14 +89,14 @@ export default async function Project({ params }: ProjectPageProps) {
                 </div>
             </div>
 
-            <Image
+            {project.media.length > 0 ? <ProjectGallery key={`${project.id}:${project.media.map(item => item.id).join(",")}`} items={project.media} projectName={project.companyName} /> : <Image
                 src={project.companyLogoImg}
                 alt={project.companyName}
                 width={720}
                 height={405}
                 className="my-8 rounded-md border bg-muted transition-colors"
                 priority
-            />
+            />}
 
             <div className="mb-7 ">
                 <h2 className="inline-block font-heading text-3xl leading-tight lg:text-3xl mb-2">

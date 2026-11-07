@@ -58,8 +58,8 @@ try {
     const baselineNavigations = navigations;
     console.log("PASS App: /projects server-renders all database projects with Fallen Tear first.");
 
-    await sql`INSERT INTO portfolio_projects (id, project_type, company_name, categories, short_description, website_url, github_url, technologies, start_date, end_date, cover_asset, description_paragraphs, description_bullets, sort_order, published)
-        SELECT ${id}, project_type, ${title}, categories, 'Temporary Neon integration verification project.', website_url, github_url, technologies, start_date, end_date, ${`storage:${key}`}, description_paragraphs, description_bullets, 99999, false FROM portfolio_projects WHERE id = 'heartfleet'`;
+    await sql`INSERT INTO portfolio_projects (id, project_type, company_name, categories, short_description, website_url, github_url, technologies, start_date, end_date, cover_asset, description_paragraphs, description_bullets, sort_order, published, badges)
+        SELECT ${id}, project_type, ${title}, categories, 'Temporary Neon integration verification project.', website_url, github_url, technologies, start_date, end_date, ${`storage:${key}`}, description_paragraphs, description_bullets, 99999, false, ARRAY['Custom project badge'] FROM portfolio_projects WHERE id = 'heartfleet'`;
     inserted = true;
     const draftPage = await browser.newPage();
     await draftPage.goto(`${origin}/projects/${id}`);
@@ -71,6 +71,7 @@ try {
     await sql`UPDATE portfolio_projects SET published = true WHERE id = ${id}`;
     const heading = page.getByRole("heading", { name: title, exact: true });
     await heading.waitFor({ state: "attached", timeout: 45000 });
+    assert.ok((await heading.locator("xpath=../..").textContent()).includes("Custom project badge"));
     assert.equal(navigations, baselineNavigations);
     assert.equal(await page.locator("h5").first().textContent(), "Fallen Tear: The Ascension");
     const image = heading.locator("xpath=../..").locator("img").first();
@@ -88,6 +89,7 @@ try {
     const detailResponse = await detail.goto(`${origin}/projects/${id}`, { waitUntil: "networkidle" });
     assert.equal(detailResponse.status(), 200);
     assert.ok((await detail.locator("h1").textContent()).includes(updatedTitle));
+    await detail.getByText("Custom project badge", { exact: true }).waitFor();
     await detail.getByRole("heading", { name: "Gallery preview", exact: true }).waitFor();
     await detail.close();
     console.log("PASS Postgres + App: live title edit and newly created detail page reflect the database.");

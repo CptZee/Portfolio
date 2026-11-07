@@ -12,8 +12,20 @@ export interface ProjectInterface {
     startDate: Date;
     endDate: Date;
     companyLogoImg: string;
+    badges: string[];
+    isFlagship: boolean;
+    media: ProjectMedia[];
     descriptionDetails: { paragraphs: string[]; bullets: string[] };
     pagesInfoArr: { title: string; imgArr: string[]; description?: string }[];
+}
+
+export interface ProjectMedia {
+    id: string;
+    kind: "image" | "video" | "embed";
+    source: string;
+    poster?: string;
+    alt: string;
+    caption?: string;
 }
 
 export interface ExperienceInterface {

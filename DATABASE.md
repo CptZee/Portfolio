@@ -8,10 +8,25 @@ Postgres stores structured portfolio data, a public object-storage bucket stores
 | --- | --- |
 | `portfolio_projects` | `project_type`, `company_name`, `categories`, `short_description`, `website_url`, `github_url`, `technologies`, `start_date`, `end_date`, `cover_asset`, `description_paragraphs`, `description_bullets` |
 | `portfolio_project_pages` | `project_id`, `title`, `description`, `image_assets`, `sort_order` |
+| `portfolio_project_media` | `project_id`, `media_type`, `asset_url`, `poster_asset`, `alt_text`, `caption`, `sort_order`, `published` |
 | `portfolio_experiences` | `position`, `company`, `location`, `start_date`, `end_date`, `description_paragraphs`, `achievements`, `skills`, `company_url`, `logo_asset` |
 | `portfolio_services` | `name`, `tagline`, `category`, `starting_price`, `timeline`, `features`, `example_url`, `example_label` |
 
 The three main tables also have `id`, `sort_order`, `published`, `created_at`, and `updated_at`. Array fields use native PostgreSQL `text[]`; prices use nonnegative `numeric(12,2)` in PHP; dates use `timestamptz`. An experience with NULL `end_date` is displayed as Present. Projects enforce valid categories/types and nondecreasing dates. Gallery pages reference a project through a foreign key and are deleted with their parent.
+
+## Project badges, flagship ordering, and media
+
+Projects also have `badges` (a text array of nonempty custom labels), `is_flagship`, and `flagship_rank`. Badge labels display on both cards and detail pages. Set `is_flagship` true to prioritize a project; smaller `flagship_rank` values appear first. Fallen Tear has rank 0 and Seller's Notebook rank 1, keeping professional work first and the flagship personal project next. Badges can be changed independently of ordering, for example `ARRAY['Featured', 'Open source']`.
+
+Use `portfolio_project_media` for mixed image/video showcases. Rows reference a project and have their own `sort_order` and `published` flag. Media belonging to unpublished projects is not fetched. Deleting a project cascades to its media records; stored objects must be removed separately when no longer referenced.
+
+- `image`: `asset_url` points to an uploaded image, such as `storage:projects/my-project/screen.png`.
+- `video`: `asset_url` points to a browser-playable MP4 or WebM; set `poster_asset` to an image key. Playback uses native controls, starts only on request, and uses `preload="none"`.
+- `embed`: use a YouTube or Vimeo HTTPS video URL. The renderer validates the provider and converts it to the supported embed URL. Arbitrary iframe providers/HTML are not accepted.
+
+Set meaningful `alt_text` for every item and optionally add a `caption`. The first ordered media item is shown initially, so start with an image if you want video providers to load only after selection. Thumbnail selection, previous/next navigation, and enlarged image viewing are available. Asset keys resolve against the current branch's public `assets` bucket. Existing `portfolio_project_pages` image arrays still work for older page-specific galleries. Projects without media keep their original cover presentation.
+
+Seller's Notebook uses its public demonstration images and promotional video, containing fictional sample data. Fallen Tear's showcase uses official promotional screenshots and a trailer from its public store/team pages. These are separate from private account attachments or development assets.
 
 The app reads explicit columns. Migrations are verified on an isolated branch before being applied to the target database, preserving data, publication settings, ordering, and storage keys.
 
